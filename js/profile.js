@@ -3,6 +3,8 @@ const report = document.getElementById('reportBtn');
 const modal = document.getElementById('pmModal');
 const openBtn = document.getElementById('openPrivate');
 const finalScreen = document.getElementById('finalScreen');
+const finalLink = document.getElementById('finalLink');
+const CHAT_URL = 'https://share.crack.wrtn.ai/0tv3b2';
 let reportClicks = 0;
 let messageQueued = false;
 
@@ -39,11 +41,33 @@ report.addEventListener('click', ()=>{
   }
 });
 
+function goToChat(){
+  window.location.assign(CHAT_URL);
+}
+
 openBtn.addEventListener('click', ()=>{
   modal.classList.add('hidden');
   finalScreen.classList.remove('hidden');
+
+  // Automatic redirect attempt.
   setTimeout(()=>{
-    // 실제 캐릭터챗 URL을 받으면 아래 주소를 교체하면 됩니다.
-    window.location.href = '#character-chat-link';
+    goToChat();
   }, 1400);
+
+  // Fallback: if navigation is blocked, reveal a direct link.
+  setTimeout(()=>{
+    if(finalLink) finalLink.classList.remove('hidden');
+  }, 2200);
+});
+
+finalScreen.addEventListener('click', (event)=>{
+  if(event.target === finalLink) return;
+  goToChat();
+});
+
+finalScreen.addEventListener('keydown', (event)=>{
+  if(event.key === 'Enter' || event.key === ' '){
+    event.preventDefault();
+    goToChat();
+  }
 });
